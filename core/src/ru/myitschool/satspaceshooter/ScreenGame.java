@@ -12,11 +12,14 @@ public class ScreenGame implements Screen {
     Texture imgStars;
     Texture imgShip;
 
+    Sky[] skies = new Sky[2];
+
     public ScreenGame(MyGG myGG){
         gg = myGG;
         imgStars = new Texture("stars.png");
         imgShip = new Texture("ship.png");
-
+        skies[0] = new Sky(SCR_WIDTH/2, SCR_HEIGHT/2);
+        skies[1] = new Sky(SCR_WIDTH/2, SCR_HEIGHT+SCR_HEIGHT/2);
     }
 
     @Override
@@ -32,10 +35,15 @@ public class ScreenGame implements Screen {
             gg.camera.unproject(gg.touch);
         }
 
+        // события
+        for (Sky sky: skies) sky.move();
+
         gg.camera.update();
         gg.batch.setProjectionMatrix(gg.camera.combined);
         gg.batch.begin();
-        gg.batch.draw(imgStars, 0, 0, SCR_WIDTH, SCR_HEIGHT);
+        for (Sky sky: skies) {
+            gg.batch.draw(imgStars, sky.getX(), sky.getY(), sky.width, sky.height);
+        }
         gg.batch.end();
     }
 

@@ -18,6 +18,14 @@ public class SpaceObject {
         y += vy;
     }
 
+    public float getX() {
+        return x-width/2;
+    }
+
+    public float getY() {
+        return y-height/2;
+    }
+
     boolean outOfBounds(){
         return x<-width/2 || x>SCR_WIDTH+width/2 || y<-height/2 || y>SCR_HEIGHT+height/2;
     }
