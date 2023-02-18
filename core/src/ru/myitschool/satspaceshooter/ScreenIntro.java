@@ -9,14 +9,14 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class ScreenIntro implements Screen {
     MyGG gg;
-    Texture imgStars;
+    Texture imgBackGround;
     Texture imgShip;
 
     TextButton btnPlay, btnSettings, btnAbout, btnExit;
 
     public ScreenIntro(MyGG myGG){
         gg = myGG;
-        imgStars = new Texture("bg/cosmos01.jpg");
+        imgBackGround = new Texture("bg/cosmos01.jpg");
         imgShip = new Texture("ship.png");
         btnPlay = new TextButton(gg.fontLarge, "ИГРАТЬ", 100, 1100);
         btnSettings = new TextButton(gg.fontLarge, "НАСТРОЙКИ", 100, 1000);
@@ -42,7 +42,7 @@ public class ScreenIntro implements Screen {
                 gg.setScreen(gg.screenSettings);
             }
             if(btnAbout.hit(gg.touch.x, gg.touch.y)) {
-                //gg.setScreen(gg.screenSettings);
+                gg.setScreen(gg.screenAbout);
             }
             if(btnExit.hit(gg.touch.x, gg.touch.y)) {
                 Gdx.app.exit();
@@ -52,7 +52,7 @@ public class ScreenIntro implements Screen {
         gg.camera.update();
         gg.batch.setProjectionMatrix(gg.camera.combined);
         gg.batch.begin();
-        gg.batch.draw(imgStars, 0, 0, SCR_WIDTH, SCR_HEIGHT);
+        gg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         gg.batch.draw(imgShip, 520, 1080);
         btnPlay.font.draw(gg.batch, btnPlay.text, btnPlay.x, btnPlay.y);
         btnSettings.font.draw(gg.batch, btnSettings.text, btnSettings.x, btnSettings.y);
@@ -83,6 +83,6 @@ public class ScreenIntro implements Screen {
 
     @Override
     public void dispose() {
-        imgStars.dispose();
+        imgBackGround.dispose();
     }
 }

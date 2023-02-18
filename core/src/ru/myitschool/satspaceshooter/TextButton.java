@@ -42,6 +42,8 @@ public class TextButton {
 
     private void textToCenter(){
         if(isScrCenter) {
+            GlyphLayout gl = new GlyphLayout(font, text);
+            width = gl.width;
             this.x = SCR_WIDTH/2 - width/2;
         }
     }
