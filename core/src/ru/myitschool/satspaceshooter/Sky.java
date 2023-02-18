@@ -5,10 +5,8 @@ import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 
 public class Sky extends SpaceObject{
     public Sky(float x, float y) {
-        super(x, y);
+        super(x, y, SCR_WIDTH, SCR_HEIGHT);
         vy = -1;
-        width = SCR_WIDTH;
-        height = SCR_HEIGHT;
     }
 
     @Override

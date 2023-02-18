@@ -8,9 +8,11 @@ public class SpaceObject {
     float width, height;
     float vx, vy;
 
-    public SpaceObject(float x, float y) {
+    public SpaceObject(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
     void move() {
