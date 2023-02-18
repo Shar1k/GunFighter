@@ -18,6 +18,7 @@ public class MyGG extends Game {
 
 	ScreenIntro screenIntro;
 	ScreenGame screenGame;
+	ScreenSettings screenSettings;
 	
 	@Override
 	public void create () {
@@ -29,6 +30,7 @@ public class MyGG extends Game {
 
 		screenIntro = new ScreenIntro(this);
 		screenGame = new ScreenGame(this);
+		screenSettings = new ScreenSettings(this);
 		setScreen(screenIntro);
 	}
 	

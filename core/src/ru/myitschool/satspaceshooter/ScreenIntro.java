@@ -16,12 +16,12 @@ public class ScreenIntro implements Screen {
 
     public ScreenIntro(MyGG myGG){
         gg = myGG;
-        imgStars = new Texture("stars.png");
+        imgStars = new Texture("bg/cosmos01.jpg");
         imgShip = new Texture("ship.png");
-        btnPlay = new TextButton(gg.fontLarge, "ИГРАТЬ", 100, 600);
-        btnSettings = new TextButton(gg.fontLarge, "НАСТРОЙКИ", 100, 500);
-        btnAbout = new TextButton(gg.fontLarge, "ОБ ИГРЕ", 100, 400);
-        btnExit = new TextButton(gg.fontLarge, "ВЫХОД", 100, 300);
+        btnPlay = new TextButton(gg.fontLarge, "ИГРАТЬ", 100, 1100);
+        btnSettings = new TextButton(gg.fontLarge, "НАСТРОЙКИ", 100, 1000);
+        btnAbout = new TextButton(gg.fontLarge, "ОБ ИГРЕ", 100, 900);
+        btnExit = new TextButton(gg.fontLarge, "ВЫХОД", 100, 800);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ScreenIntro implements Screen {
                 gg.setScreen(gg.screenGame);
             }
             if(btnSettings.hit(gg.touch.x, gg.touch.y)) {
-                //gg.setScreen(gg.screenSettings);
+                gg.setScreen(gg.screenSettings);
             }
             if(btnAbout.hit(gg.touch.x, gg.touch.y)) {
                 //gg.setScreen(gg.screenSettings);
@@ -53,7 +53,7 @@ public class ScreenIntro implements Screen {
         gg.batch.setProjectionMatrix(gg.camera.combined);
         gg.batch.begin();
         gg.batch.draw(imgStars, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        gg.batch.draw(imgShip, SCR_WIDTH/2, SCR_HEIGHT/4*3);
+        gg.batch.draw(imgShip, 520, 1080);
         btnPlay.font.draw(gg.batch, btnPlay.text, btnPlay.x, btnPlay.y);
         btnSettings.font.draw(gg.batch, btnSettings.text, btnSettings.x, btnSettings.y);
         btnAbout.font.draw(gg.batch, btnAbout.text, btnAbout.x, btnAbout.y);
