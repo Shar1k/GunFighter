@@ -19,11 +19,11 @@ public class ScreenSettings implements Screen {
         gg = myGG;
         imgBackGround = new Texture("bg/cosmos02.jpg");
 
-        btnName = new TextButton(gg.fontLarge, "Имя: "+playerName, 20, 1100);
-        btnClearRec = new TextButton(gg.fontLarge, "Очистка рекордов", 20, 1000);
-        btnSound = new TextButton(gg.fontLarge, "Звук вкл", 20, 900);
-        btnMusic = new TextButton(gg.fontLarge, "Музыка вкл", 20, 800);
-        btnBack = new TextButton(gg.fontLarge, "Назад", 20, 700);
+        btnName = new TextButton(gg.fontLarge, "Имя: "+playerName, 20, 1100, true);
+        btnClearRec = new TextButton(gg.fontLarge, "Очистка рекордов", 20, 1000, true);
+        btnSound = new TextButton(gg.fontLarge, "Звук вкл", 20, 900, true);
+        btnMusic = new TextButton(gg.fontLarge, "Музыка вкл", 20, 800, true);
+        btnBack = new TextButton(gg.fontLarge, "Назад", 20, 700, true);
     }
 
     @Override
@@ -44,10 +44,12 @@ public class ScreenSettings implements Screen {
 
             }
             if(btnSound.hit(gg.touch.x, gg.touch.y)) {
-
+                gg.soundOn = !gg.soundOn;
+                btnSound.text = gg.soundOn ? "Звук вкл" : "Звук выкл";
             }
             if(btnMusic.hit(gg.touch.x, gg.touch.y)) {
-
+                gg.musicOn = !gg.musicOn;
+                btnMusic.text = gg.musicOn ? "Музыка вкл" : "Музыка выкл";
             }
             if(btnBack.hit(gg.touch.x, gg.touch.y)) {
                 gg.setScreen(gg.screenIntro);
@@ -58,11 +60,11 @@ public class ScreenSettings implements Screen {
         gg.batch.setProjectionMatrix(gg.camera.combined);
         gg.batch.begin();
         gg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        btnName.font.draw(gg.batch, btnName.text, 10, btnName.y, SCR_WIDTH-20, Align.center, true);
-        btnClearRec.font.draw(gg.batch, btnClearRec.text, 10, btnClearRec.y, SCR_WIDTH-20, Align.center, true);
-        btnSound.font.draw(gg.batch, btnSound.text, 10, btnSound.y, SCR_WIDTH-20, Align.center, true);
-        btnMusic.font.draw(gg.batch, btnMusic.text, 10, btnMusic.y, SCR_WIDTH-20, Align.center, true);
-        btnBack.font.draw(gg.batch, btnBack.text, 10, btnBack.y, SCR_WIDTH-20, Align.center, true);
+        btnName.font.draw(gg.batch, btnName.text, btnName.x, btnName.y);
+        btnClearRec.font.draw(gg.batch, btnClearRec.text, btnClearRec.x, btnClearRec.y);
+        btnSound.font.draw(gg.batch, btnSound.text, btnSound.x, btnSound.y);
+        btnMusic.font.draw(gg.batch, btnMusic.text, btnMusic.x, btnMusic.y);
+        btnBack.font.draw(gg.batch, btnBack.text, btnBack.x, btnBack.y);
         gg.batch.end();
     }
 

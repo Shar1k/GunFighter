@@ -19,6 +19,9 @@ public class MyGG extends Game {
 	ScreenIntro screenIntro;
 	ScreenGame screenGame;
 	ScreenSettings screenSettings;
+
+	boolean soundOn = true;
+	boolean musicOn = true;
 	
 	@Override
 	public void create () {
