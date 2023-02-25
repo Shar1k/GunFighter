@@ -48,10 +48,11 @@ public class ScreenGame implements Screen {
             gg.setScreen(gg.screenIntro);
         }
         if(isGyroscopeAvailable) {
-            s = "x "+(int)(Gdx.input.getGyroscopeX()*100)+" y "+(int)(Gdx.input.getGyroscopeY()*100)+" z "+(int)(Gdx.input.getGyroscopeZ()*100);
-        } else if(isAccelerometerAvailable) {
-
+            ship.vx = Gdx.input.getGyroscopeY()*10;
         }
+        /*if(isAccelerometerAvailable) {
+
+        }*/
 
         // события
         for (Sky sky: skies) sky.move();
@@ -64,7 +65,7 @@ public class ScreenGame implements Screen {
             gg.batch.draw(imgStars, sky.getX(), sky.getY(), sky.width, sky.height);
         }
         gg.batch.draw(imgShip, ship.getX(), ship.getY(), ship.width, ship.height);
-        gg.font.draw(gg.batch, s, 10, 800);
+        //gg.font.draw(gg.batch, s, 10, 800);
         gg.batch.end();
     }
 
