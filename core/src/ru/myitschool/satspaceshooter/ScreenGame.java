@@ -6,6 +6,7 @@ import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -16,32 +17,43 @@ public class ScreenGame implements Screen {
     Texture imgStars;
     Texture imgShip;
     Texture imgEnemy;
+    Texture imgShot;
+
+    Sound sndShot;
 
     Sky[] skies = new Sky[2];
     Ship ship;
     ArrayList<Enemy> enemies = new ArrayList<>();
+    ArrayList<Shot> shots = new ArrayList<>();
 
     boolean isGyroscopeAvailable;
     boolean isAccelerometerAvailable;
 
     long timeEnemyLastSpawn, timeEnemySpawnInterval = 1500;
+    long timeShotLastSpawn, timeShotSpawnInterval = 500;
+
+    boolean pause;
 
     public ScreenGame(MyGG myGG){
         gg = myGG;
         imgStars = new Texture("stars.png");
         imgShip = new Texture("ship.png");
         imgEnemy = new Texture("enemy.png");
+        imgShot = new Texture("shot.png");
+        sndShot = Gdx.audio.newSound(Gdx.files.internal("blaster.wav"));
+
         skies[0] = new Sky(SCR_WIDTH/2, SCR_HEIGHT/2);
         skies[1] = new Sky(SCR_WIDTH/2, SCR_HEIGHT+SCR_HEIGHT/2);
 
         isAccelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
         isGyroscopeAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Gyroscope);
+        ship = new Ship(SCR_WIDTH/2, 150, 100, 100);
     }
 
     @Override
     public void show() {
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
-        ship = new Ship(SCR_WIDTH/2, 150, 100, 100);
+        pause = false;
     }
 
     @Override
@@ -61,17 +73,32 @@ public class ScreenGame implements Screen {
         }
 
         // события
-        for (Sky sky: skies) sky.move();
-        ship.move();
-        spawnEnemy();
-        for(Enemy e: enemies) e.move();
+        if(!pause) {
+            for (Sky sky : skies) sky.move();
+            ship.move();
+            spawnEnemy();
+            spawnShot();
+            for (int i = 0; i < enemies.size(); i++) {
+                enemies.get(i).move();
+                if (enemies.get(i).outOfBounds()) {
+                    enemies.remove(i);
+                }
+            }
+            for (int i = 0; i < shots.size(); i++) {
+                shots.get(i).move();
+                if (shots.get(i).outOfBounds()) {
+                    shots.remove(i);
+                }
+            }
+        }
 
         // отрисовка всего
         gg.camera.update();
         gg.batch.setProjectionMatrix(gg.camera.combined);
         gg.batch.begin();
-        for (Sky sky: skies) gg.batch.draw(imgStars, sky.getX(), sky.getY(), sky.width, sky.height);
+        for(Sky sky: skies) gg.batch.draw(imgStars, sky.getX(), sky.getY(), sky.width, sky.height);
         for(Enemy enemy: enemies) gg.batch.draw(imgEnemy, enemy.getX(), enemy.getY(), enemy.width, enemy.height);
+        for(Shot shot: shots) gg.batch.draw(imgShot, shot.getX(), shot.getY(), shot.width, shot.height);
         gg.batch.draw(imgShip, ship.getX(), ship.getY(), ship.width, ship.height);
         gg.batch.end();
     }
@@ -94,6 +121,7 @@ public class ScreenGame implements Screen {
     @Override
     public void hide() {
         Gdx.input.setCatchKey(Input.Keys.BACK, false);
+        pause = true;
     }
 
     @Override
@@ -106,6 +134,14 @@ public class ScreenGame implements Screen {
         if(TimeUtils.millis() > timeEnemyLastSpawn+timeEnemySpawnInterval) {
             enemies.add(new Enemy());
             timeEnemyLastSpawn = TimeUtils.millis();
+        }
+    }
+
+    void spawnShot(){
+        if(TimeUtils.millis() > timeShotLastSpawn+timeShotSpawnInterval) {
+            shots.add(new Shot(ship.x, ship.y));
+            timeShotLastSpawn = TimeUtils.millis();
+            if(gg.soundOn) sndShot.play();
         }
     }
 }

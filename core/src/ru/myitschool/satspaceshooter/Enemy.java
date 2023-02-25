@@ -13,7 +13,7 @@ public class Enemy extends SpaceObject{
     }
 
     @Override
-    void move() {
-        super.move();
+    boolean outOfBounds() {
+        return y<-height/2;
     }
 }
