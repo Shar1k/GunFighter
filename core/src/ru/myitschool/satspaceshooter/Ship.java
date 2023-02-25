@@ -14,7 +14,7 @@ public class Ship extends SpaceObject{
     }
 
     void hit(float tx, float ty) {
-        vx = (tx-x)/50;
+        vx = (tx-x)/20;
     }
 
     @Override
