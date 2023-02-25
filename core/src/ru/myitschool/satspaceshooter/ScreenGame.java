@@ -16,13 +16,19 @@ public class ScreenGame implements Screen {
     Sky[] skies = new Sky[2];
     Ship ship;
 
+    boolean isGyroscopeAvailable;
+    boolean isAccelerometerAvailable;
+    String s;
+
     public ScreenGame(MyGG myGG){
         gg = myGG;
         imgStars = new Texture("stars.png");
         imgShip = new Texture("ship.png");
         skies[0] = new Sky(SCR_WIDTH/2, SCR_HEIGHT/2);
         skies[1] = new Sky(SCR_WIDTH/2, SCR_HEIGHT+SCR_HEIGHT/2);
-        ship = new Ship(SCR_WIDTH/2-50, 150, 100, 100);
+        ship = new Ship(SCR_WIDTH/2, 150, 100, 100);
+        isAccelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
+        isGyroscopeAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Gyroscope);
     }
 
     @Override
@@ -41,6 +47,11 @@ public class ScreenGame implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
             gg.setScreen(gg.screenIntro);
         }
+        if(isGyroscopeAvailable) {
+            s = "x "+(int)(Gdx.input.getGyroscopeX()*100)+" y "+(int)(Gdx.input.getGyroscopeY()*100)+" z "+(int)(Gdx.input.getGyroscopeZ()*100);
+        } else if(isAccelerometerAvailable) {
+
+        }
 
         // события
         for (Sky sky: skies) sky.move();
@@ -52,7 +63,8 @@ public class ScreenGame implements Screen {
         for (Sky sky: skies) {
             gg.batch.draw(imgStars, sky.getX(), sky.getY(), sky.width, sky.height);
         }
-        gg.batch.draw(imgShip, ship.x, ship.y, ship.width, ship.height);
+        gg.batch.draw(imgShip, ship.getX(), ship.getY(), ship.width, ship.height);
+        gg.font.draw(gg.batch, s, 10, 800);
         gg.batch.end();
     }
 
