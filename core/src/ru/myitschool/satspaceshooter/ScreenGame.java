@@ -43,16 +43,14 @@ public class ScreenGame implements Screen {
             gg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gg.camera.unproject(gg.touch);
             ship.hit(gg.touch.x, gg.touch.y);
+        } else if(isAccelerometerAvailable) {
+            ship.vx = -Gdx.input.getAccelerometerX()*10;
+        } else if(isGyroscopeAvailable) {
+            ship.vx = Gdx.input.getGyroscopeY()*10;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
             gg.setScreen(gg.screenIntro);
         }
-        if(isGyroscopeAvailable) {
-            ship.vx = Gdx.input.getGyroscopeY()*10;
-        }
-        /*if(isAccelerometerAvailable) {
-
-        }*/
 
         // события
         for (Sky sky: skies) sky.move();
