@@ -18,6 +18,7 @@ public class ScreenGame implements Screen {
     Texture imgShip;
     Texture imgEnemy;
     Texture imgShot;
+    Texture[] imgFragment = new Texture[4];
 
     Sound sndShot, sndExplosion;
 
@@ -25,6 +26,7 @@ public class ScreenGame implements Screen {
     Ship ship;
     ArrayList<Enemy> enemies = new ArrayList<>();
     ArrayList<Shot> shots = new ArrayList<>();
+    ArrayList<Fragment> fragments = new ArrayList<>();
 
     boolean isGyroscopeAvailable;
     boolean isAccelerometerAvailable;
@@ -40,6 +42,9 @@ public class ScreenGame implements Screen {
         imgShip = new Texture("ship.png");
         imgEnemy = new Texture("enemy.png");
         imgShot = new Texture("shot.png");
+        for (int i = 0; i < imgFragment.length; i++) {
+            imgFragment[i] = new Texture("fragment0"+i+".png");
+        }
         sndShot = Gdx.audio.newSound(Gdx.files.internal("blaster.wav"));
         sndExplosion = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
 
@@ -89,14 +94,23 @@ public class ScreenGame implements Screen {
                 shots.get(i).move();
                 if (shots.get(i).outOfBounds()) {
                     shots.remove(i);
+                    break;
                 }
                 for (int j = enemies.size()-1; j >= 0; j--) {
                     if(shots.get(i).overlap(enemies.get(j))){
+                        spawnFragments(enemies.get(j).x, enemies.get(j).y);
                         shots.remove(i);
                         enemies.remove(j);
                         if(gg.soundOn) sndExplosion.play();
+                        break;
                     }
                 }
+            }
+        }
+        for (int i = fragments.size()-1; i >= 0 ; i--) {
+            fragments.get(i).move();
+            if (fragments.get(i).outOfBounds()) {
+                fragments.remove(i);
             }
         }
 
@@ -105,6 +119,7 @@ public class ScreenGame implements Screen {
         gg.batch.setProjectionMatrix(gg.camera.combined);
         gg.batch.begin();
         for(Sky sky: skies) gg.batch.draw(imgStars, sky.getX(), sky.getY(), sky.width, sky.height);
+        for(Fragment frag: fragments) gg.batch.draw(imgFragment[frag.type], frag.getX(), frag.getY(), frag.width, frag.height);
         for(Enemy enemy: enemies) gg.batch.draw(imgEnemy, enemy.getX(), enemy.getY(), enemy.width, enemy.height);
         for(Shot shot: shots) gg.batch.draw(imgShot, shot.getX(), shot.getY(), shot.width, shot.height);
         gg.batch.draw(imgShip, ship.getX(), ship.getY(), ship.width, ship.height);
@@ -136,6 +151,9 @@ public class ScreenGame implements Screen {
     public void dispose() {
         imgStars.dispose();
         imgShip.dispose();
+        for (int i = 0; i < imgFragment.length; i++) {
+            imgFragment[i].dispose();
+        }
         sndExplosion.dispose();
         sndShot.dispose();
     }
@@ -152,6 +170,12 @@ public class ScreenGame implements Screen {
             shots.add(new Shot(ship.x, ship.y));
             timeShotLastSpawn = TimeUtils.millis();
             if(gg.soundOn) sndShot.play();
+        }
+    }
+
+    void spawnFragments(float x, float y){
+        for (int i = 0; i < 30; i++) {
+            fragments.add(new Fragment(x, y));
         }
     }
 }
