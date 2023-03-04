@@ -88,11 +88,15 @@ public class ScreenGame implements Screen {
         if(!pause) {
             for (Sky sky : skies) sky.move();
             ship.move();
+            if(ship.isVisible) {
+                spawnShot();
+            }
             spawnEnemy();
-            spawnShot();
+
             for (int i = enemies.size()-1; i >= 0 ; i--) {
                 enemies.get(i).move();
                 if (enemies.get(i).outOfBounds()) {
+                    if(ship.isVisible) killShip();
                     enemies.remove(i);
                 }
             }
@@ -131,8 +135,11 @@ public class ScreenGame implements Screen {
                     frag.width, frag.height, 1, 1, frag.angle);
         for(Enemy enemy: enemies) gg.batch.draw(imgEnemy, enemy.getX(), enemy.getY(), enemy.width, enemy.height);
         for(Shot shot: shots) gg.batch.draw(imgShot, shot.getX(), shot.getY(), shot.width, shot.height);
-        gg.batch.draw(imgShip, ship.getX(), ship.getY(), ship.width, ship.height);
+        if(ship.isVisible) gg.batch.draw(imgShip, ship.getX(), ship.getY(), ship.width, ship.height);
         gg.font.draw(gg.batch, "FRAGS: "+frags, 10, SCR_HEIGHT-10);
+        for (int i = 1; i < ship.lives+1; i++) {
+            gg.batch.draw(imgShip, SCR_WIDTH-60*i, SCR_HEIGHT-60, 50, 50);
+        }
         gg.batch.end();
     }
 
@@ -185,5 +192,11 @@ public class ScreenGame implements Screen {
         for (int i = 0; i < 30; i++) {
             fragments.add(new Fragment(x, y));
         }
+    }
+
+    void killShip(){
+        spawnFragments(ship.x, ship.y);
+        ship.kill();
+        if(gg.soundOn) sndExplosion.play();
     }
 }
