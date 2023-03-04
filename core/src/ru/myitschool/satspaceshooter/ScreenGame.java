@@ -33,10 +33,11 @@ public class ScreenGame implements Screen {
     boolean isGyroscopeAvailable;
     boolean isAccelerometerAvailable;
 
-    long timeEnemyLastSpawn, timeEnemySpawnInterval = 1500;
+    long timeEnemyLastSpawn, timeEnemySpawnInterval = 1000;
     long timeShotLastSpawn, timeShotSpawnInterval = 500;
 
     boolean pause;
+    int frags;
 
     public ScreenGame(MyGG myGG){
         gg = myGG;
@@ -58,7 +59,7 @@ public class ScreenGame implements Screen {
 
         isAccelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
         isGyroscopeAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Gyroscope);
-        ship = new Ship(SCR_WIDTH/2, 150, 100, 100);
+        ship = new Ship(SCR_WIDTH/2, 100, 100, 100);
     }
 
     @Override
@@ -107,6 +108,7 @@ public class ScreenGame implements Screen {
                         shots.remove(i);
                         enemies.remove(j);
                         if(gg.soundOn) sndExplosion.play();
+                        frags++;
                         break;
                     }
                 }
@@ -130,6 +132,7 @@ public class ScreenGame implements Screen {
         for(Enemy enemy: enemies) gg.batch.draw(imgEnemy, enemy.getX(), enemy.getY(), enemy.width, enemy.height);
         for(Shot shot: shots) gg.batch.draw(imgShot, shot.getX(), shot.getY(), shot.width, shot.height);
         gg.batch.draw(imgShip, ship.getX(), ship.getY(), ship.width, ship.height);
+        gg.font.draw(gg.batch, "FRAGS: "+frags, 10, SCR_HEIGHT-10);
         gg.batch.end();
     }
 
@@ -179,7 +182,7 @@ public class ScreenGame implements Screen {
     }
 
     void spawnFragments(float x, float y){
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 30; i++) {
             fragments.add(new Fragment(x, y));
         }
     }
