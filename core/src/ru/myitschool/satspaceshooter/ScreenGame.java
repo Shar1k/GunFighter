@@ -174,7 +174,7 @@ public class ScreenGame implements Screen {
     }
 
     void spawnFragments(float x, float y){
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 300; i++) {
             fragments.add(new Fragment(x, y));
         }
     }
