@@ -23,6 +23,8 @@ public class MyGG extends Game {
 
 	boolean soundOn = true;
 	boolean musicOn = true;
+
+	String playerName = "Noname";
 	
 	@Override
 	public void create () {

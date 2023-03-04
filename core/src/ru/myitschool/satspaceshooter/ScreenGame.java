@@ -30,13 +30,18 @@ public class ScreenGame implements Screen {
     ArrayList<Shot> shots = new ArrayList<>();
     ArrayList<Fragment> fragments = new ArrayList<>();
 
+    TextButton btnPlay, btnExit;
+
     boolean isGyroscopeAvailable;
     boolean isAccelerometerAvailable;
 
     long timeEnemyLastSpawn, timeEnemySpawnInterval = 1000;
     long timeShotLastSpawn, timeShotSpawnInterval = 500;
 
+    Player[] players = new Player[10];
+
     boolean pause;
+    boolean gameOver;
     int frags;
 
     public ScreenGame(MyGG myGG){
@@ -54,12 +59,21 @@ public class ScreenGame implements Screen {
         sndShot = Gdx.audio.newSound(Gdx.files.internal("blaster.wav"));
         sndExplosion = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
 
+        btnPlay = new TextButton(gg.fontLarge, "ИГРАТЬ", 100, 300);
+        btnExit = new TextButton(gg.fontLarge, "ВЫХОД", 400, 300);
+
         skies[0] = new Sky(SCR_WIDTH/2, SCR_HEIGHT/2);
         skies[1] = new Sky(SCR_WIDTH/2, SCR_HEIGHT+SCR_HEIGHT/2);
 
+        // создаём игроков
+        for (int i = 0; i < players.length; i++) {
+            players[i] = new Player("Noname", 0);
+        }
+        Player.loadTableOfRecords(players);
+
         isAccelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
         isGyroscopeAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Gyroscope);
-        ship = new Ship(SCR_WIDTH/2, 100, 100, 100);
+        newGame();
     }
 
     @Override
@@ -75,6 +89,13 @@ public class ScreenGame implements Screen {
             gg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gg.camera.unproject(gg.touch);
             ship.hit(gg.touch.x, gg.touch.y);
+            if(btnPlay.hit(gg.touch.x, gg.touch.y)) {
+                newGame();
+            }
+            if(btnExit.hit(gg.touch.x, gg.touch.y)) {
+                newGame();
+                gg.setScreen(gg.screenIntro);
+            }
         } else if(isAccelerometerAvailable) {
             ship.vx = -Gdx.input.getAccelerometerX()*10;
         } else if(isGyroscopeAvailable) {
@@ -87,7 +108,9 @@ public class ScreenGame implements Screen {
         // события
         if(!pause) {
             for (Sky sky : skies) sky.move();
-            ship.move();
+            if(!gameOver) {
+                ship.move();
+            }
             if(ship.isVisible) {
                 spawnShot();
             }
@@ -139,6 +162,11 @@ public class ScreenGame implements Screen {
         gg.font.draw(gg.batch, "FRAGS: "+frags, 10, SCR_HEIGHT-10);
         for (int i = 1; i < ship.lives+1; i++) {
             gg.batch.draw(imgShip, SCR_WIDTH-60*i, SCR_HEIGHT-60, 50, 50);
+        }
+        if(gameOver) {
+            gg.font.draw(gg.batch, Player.tableOfRecordsToString(players), 200, SCR_HEIGHT-200);
+            btnPlay.font.draw(gg.batch, btnPlay.text, btnPlay.x, btnPlay.y);
+            btnExit.font.draw(gg.batch, btnExit.text, btnExit.x, btnExit.y);
         }
         gg.batch.end();
     }
@@ -198,5 +226,23 @@ public class ScreenGame implements Screen {
         spawnFragments(ship.x, ship.y);
         ship.kill();
         if(gg.soundOn) sndExplosion.play();
+        if(ship.lives == 0) gameOver();
+    }
+
+    void newGame(){
+        ship = new Ship(SCR_WIDTH/2, 100, 100, 100);
+        enemies.clear();
+        fragments.clear();
+        shots.clear();
+        gameOver = false;
+        frags = 0;
+    }
+
+    void gameOver(){
+        gameOver = true;
+        players[players.length-1].name = gg.playerName;
+        players[players.length-1].frags = frags;
+        Player.sortTableOfRecords(players);
+        Player.saveTableOfRecords(players);
     }
 }
