@@ -4,6 +4,7 @@ import static ru.myitschool.satspaceshooter.MyGG.SCR_HEIGHT;
 import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Align;
@@ -28,6 +29,7 @@ public class ScreenSettings implements Screen {
         btnBack = new TextButton(gg.fontLarge, "Назад", 20, 700, true);
 
         keyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT/1.7f, 8);
+        loadSettings();
     }
 
     @Override
@@ -52,6 +54,8 @@ public class ScreenSettings implements Screen {
                     isEnterName = true;
                 }
                 if (btnClearRec.hit(gg.touch.x, gg.touch.y)) {
+                    Player.clearTableOfRecords(gg.screenGame.players);
+                    Player.saveTableOfRecords(gg.screenGame.players);
                     btnClearRec.setText("Рекорды очищены");
                 }
                 if (btnSound.hit(gg.touch.x, gg.touch.y)) {
@@ -99,11 +103,34 @@ public class ScreenSettings implements Screen {
     @Override
     public void hide() {
         btnClearRec.setText("Очистка рекордов");
+        saveSettings();
     }
 
     @Override
     public void dispose() {
         imgBackGround.dispose();
         keyboard.dispose();
+    }
+
+    void saveSettings() {
+        Preferences pref = Gdx.app.getPreferences("settings");
+        pref.putString("namePlayer", gg.playerName);
+        pref.putBoolean("sound", gg.soundOn);
+        pref.putBoolean("music", gg.musicOn);
+        pref.flush();
+    }
+
+    void loadSettings() {
+        Preferences pref = Gdx.app.getPreferences("settings");
+        if(pref.contains("namePlayer")) gg.playerName = pref.getString("namePlayer");
+        if(pref.contains("sound")) gg.soundOn = pref.getBoolean("sound");
+        if(pref.contains("music")) gg.musicOn = pref.getBoolean("music");
+        buttonsUpdate();
+    }
+
+    void buttonsUpdate() {
+        btnName.setText("Имя: "+gg.playerName);
+        btnSound.setText(gg.soundOn ? "Звук вкл" : "Звук выкл");
+        btnMusic.setText(gg.musicOn ? "Музыка вкл" : "Музыка выкл");
     }
 }

@@ -69,4 +69,11 @@ public class Player {
         } catch (Exception e){
         }
     }
+
+    static void clearTableOfRecords(Player[] players){
+        for (int i = 0; i < players.length; i++) {
+            players[i].name = "Noname";
+            players[i].frags = 0;
+        }
+    }
 }
