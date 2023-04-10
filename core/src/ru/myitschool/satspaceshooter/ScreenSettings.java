@@ -15,12 +15,11 @@ public class ScreenSettings implements Screen {
 
     TextButton btnName, btnClearRec, btnSound, btnMusic, btnBack;
 
-    InputKeyboard keyboard;
     boolean isEnterName;
 
     public ScreenSettings(MyGG myGG){
         gg = myGG;
-        imgBackGround = new Texture("bg/cosmos02.jpg");
+        imgBackGround = new Texture("bg.png");
 
         btnName = new TextButton(gg.fontLarge, "Имя: "+gg.playerName, 20, 1100, true);
         btnClearRec = new TextButton(gg.fontLarge, "Очистка рекордов", 20, 1000, true);
@@ -28,7 +27,6 @@ public class ScreenSettings implements Screen {
         btnMusic = new TextButton(gg.fontLarge, "Музыка вкл", 20, 800, true);
         btnBack = new TextButton(gg.fontLarge, "Назад", 20, 700, true);
 
-        keyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT/1.7f, 8);
         loadSettings();
     }
 
@@ -44,11 +42,7 @@ public class ScreenSettings implements Screen {
             gg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gg.camera.unproject(gg.touch);
             if(isEnterName){
-                if(keyboard.endOfEdit(gg.touch.x, gg.touch.y)){
-                    gg.playerName = keyboard.getText();
-                    btnName.setText("Имя: "+gg.playerName);
-                    isEnterName = false;
-                }
+
             } else {
                 if (btnName.hit(gg.touch.x, gg.touch.y)) {
                     isEnterName = true;
@@ -81,7 +75,6 @@ public class ScreenSettings implements Screen {
         btnSound.font.draw(gg.batch, btnSound.text, btnSound.x, btnSound.y);
         btnMusic.font.draw(gg.batch, btnMusic.text, btnMusic.x, btnMusic.y);
         btnBack.font.draw(gg.batch, btnBack.text, btnBack.x, btnBack.y);
-        if(isEnterName) keyboard.draw(gg.batch);
         gg.batch.end();
     }
 
@@ -109,7 +102,6 @@ public class ScreenSettings implements Screen {
     @Override
     public void dispose() {
         imgBackGround.dispose();
-        keyboard.dispose();
     }
 
     void saveSettings() {

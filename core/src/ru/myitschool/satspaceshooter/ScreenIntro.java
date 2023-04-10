@@ -10,14 +10,12 @@ import com.badlogic.gdx.graphics.Texture;
 public class ScreenIntro implements Screen {
     MyGG gg;
     Texture imgBackGround;
-    Texture imgShip;
 
     TextButton btnPlay, btnSettings, btnAbout, btnExit;
 
     public ScreenIntro(MyGG myGG){
         gg = myGG;
-        imgBackGround = new Texture("bg/cosmos01.jpg");
-        imgShip = new Texture("ship.png");
+        imgBackGround = new Texture("bg.png");
         btnPlay = new TextButton(gg.fontLarge, "ИГРАТЬ", 100, 1100);
         btnSettings = new TextButton(gg.fontLarge, "НАСТРОЙКИ", 100, 1000);
         btnAbout = new TextButton(gg.fontLarge, "ОБ ИГРЕ", 100, 900);
@@ -53,7 +51,6 @@ public class ScreenIntro implements Screen {
         gg.batch.setProjectionMatrix(gg.camera.combined);
         gg.batch.begin();
         gg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        gg.batch.draw(imgShip, 520, 1080);
         btnPlay.font.draw(gg.batch, btnPlay.text, btnPlay.x, btnPlay.y);
         btnSettings.font.draw(gg.batch, btnSettings.text, btnSettings.x, btnSettings.y);
         btnAbout.font.draw(gg.batch, btnAbout.text, btnAbout.x, btnAbout.y);
