@@ -5,6 +5,7 @@ import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 
 public class ScreenAbout implements Screen {
@@ -20,6 +21,8 @@ public class ScreenAbout implements Screen {
                         "Цель игры - сбивать\n" +
                         "вражеские самолётики\n";
 
+    Music menuMus = Gdx.audio.newMusic(Gdx.files.internal("menu.mp3"));
+
     public ScreenAbout(MyGG myGG){
         gg = myGG;
         imgBackGround = new Texture("bg.png");
@@ -29,7 +32,7 @@ public class ScreenAbout implements Screen {
 
     @Override
     public void show() {
-
+    menuMus.play();
     }
 
     @Override
@@ -71,7 +74,7 @@ public class ScreenAbout implements Screen {
 
     @Override
     public void hide() {
-
+    menuMus.stop();
     }
 
     @Override

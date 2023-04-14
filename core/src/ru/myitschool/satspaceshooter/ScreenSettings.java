@@ -6,12 +6,15 @@ import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Align;
 
 public class ScreenSettings implements Screen {
     MyGG gg;
     Texture imgBackGround;
+
+    Music menuMus = Gdx.audio.newMusic(Gdx.files.internal("menu.mp3"));
 
     TextButton btnName, btnClearRec, btnSound, btnMusic, btnBack;
 
@@ -32,7 +35,7 @@ public class ScreenSettings implements Screen {
 
     @Override
     public void show() {
-
+    menuMus.play();
     }
 
     @Override
@@ -95,6 +98,7 @@ public class ScreenSettings implements Screen {
 
     @Override
     public void hide() {
+        menuMus.stop();
         btnClearRec.setText("Очистка рекордов");
         saveSettings();
     }

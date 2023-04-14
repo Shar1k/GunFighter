@@ -13,12 +13,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ScreenGame implements Screen {
     MyGG gg;
 
     Texture imgBackGround;
     Music fightMus = Gdx.audio.newMusic(Gdx.files.internal("fight1.mp3"));
+
     TextButton btnPlay, btnExit;
 
     boolean isGyroscopeAvailable;
@@ -50,6 +52,7 @@ public class ScreenGame implements Screen {
     public void show() {
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         pause = false;
+
         fightMus.play();
     }
 
@@ -112,6 +115,7 @@ public class ScreenGame implements Screen {
     public void hide() {
         Gdx.input.setCatchKey(Input.Keys.BACK, false);
         pause = true;
+        fightMus.stop();
     }
 
     @Override

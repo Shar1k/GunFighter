@@ -5,11 +5,14 @@ import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 
 public class ScreenIntro implements Screen {
     MyGG gg;
     Texture imgBackGround;
+
+    Music menuMus = Gdx.audio.newMusic(Gdx.files.internal("menu.mp3"));
 
     TextButton btnPlay, btnSettings, btnAbout, btnExit;
 
@@ -24,7 +27,7 @@ public class ScreenIntro implements Screen {
 
     @Override
     public void show() {
-
+    menuMus.play();
     }
 
     @Override
@@ -75,7 +78,7 @@ public class ScreenIntro implements Screen {
 
     @Override
     public void hide() {
-
+    menuMus.stop();
     }
 
     @Override
