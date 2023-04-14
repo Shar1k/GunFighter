@@ -6,6 +6,7 @@ import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +18,7 @@ public class ScreenGame implements Screen {
     MyGG gg;
 
     Texture imgBackGround;
+    Music fightMus = Gdx.audio.newMusic(Gdx.files.internal("fight1.mp3"));
     TextButton btnPlay, btnExit;
 
     boolean isGyroscopeAvailable;
@@ -26,11 +28,10 @@ public class ScreenGame implements Screen {
 
     boolean pause;
     boolean gameOver;
-    int frags;
 
     public ScreenGame(MyGG myGG){
         gg = myGG;
-        imgBackGround = new Texture("bg.png");
+        imgBackGround = new Texture("rev.png");
         btnPlay = new TextButton(gg.fontLarge, "ИГРАТЬ", 100, 300);
         btnExit = new TextButton(gg.fontLarge, "ВЫХОД", 400, 300);
 
@@ -49,6 +50,7 @@ public class ScreenGame implements Screen {
     public void show() {
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         pause = false;
+        fightMus.play();
     }
 
     @Override
@@ -75,14 +77,13 @@ public class ScreenGame implements Screen {
         if(!pause) {
 
 
-
         }
 
         // отрисовка всего
         gg.camera.update();
         gg.batch.setProjectionMatrix(gg.camera.combined);
         gg.batch.begin();
-        gg.font.draw(gg.batch, "FRAGS: "+frags, 10, SCR_HEIGHT-10);
+        gg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
 
         if(gameOver) {
             gg.font.draw(gg.batch, Player.tableOfRecordsToString(players), 200, SCR_HEIGHT-200);
@@ -115,19 +116,19 @@ public class ScreenGame implements Screen {
 
     @Override
     public void dispose() {
+        imgBackGround.dispose();
+        fightMus.dispose();
 
     }
 
     void newGame(){
 
         gameOver = false;
-        frags = 0;
     }
 
     void gameOver(){
         gameOver = true;
         players[players.length-1].name = gg.playerName;
-        players[players.length-1].frags = frags;
         Player.sortTableOfRecords(players);
         Player.saveTableOfRecords(players);
     }
