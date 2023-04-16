@@ -116,15 +116,15 @@ public class MyGG extends Game {
 	}
 
 	void generateFont(){
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("crystal.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Chibola.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = 60;
-		parameter.color = new Color().set(1, 0.9f, 0.4f, 1);
+		parameter.color = new Color().set(1, 0, 0, 1);
 		parameter.borderColor = new Color().set(0, 0, 0, 1);
 		parameter.borderWidth = 2;
 		parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 		font = generator.generateFont(parameter);
-		parameter.color = new Color().set(1, 0.9f, 0.4f, 1);
+		parameter.color = new Color().set(1, 0, 0, 1);
 		parameter.size = 80;
 		fontLarge = generator.generateFont(parameter);
 		generator.dispose();
