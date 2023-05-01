@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector3;
 
 public class MyGG extends Game {
 	private static final String TAG = "BluetoothPong";
-	private IBluetooth bluetoothCom;
 	public static final float SCR_WIDTH = 720, SCR_HEIGHT = 1280;
 	SpriteBatch batch;
 	OrthographicCamera camera;
@@ -25,6 +24,8 @@ public class MyGG extends Game {
 
 	boolean soundOn = true;
 	boolean musicOn = true;
+
+	int shotSpeed = 25;
 
 	String playerName = "Noname";
 	
@@ -42,73 +43,6 @@ public class MyGG extends Game {
 		screenAbout = new ScreenAbout(this);
 		setScreen(screenIntro);
 	}
-
-	public void onDisconnect()
-	{
-	}
-
-	public void onConnected(boolean isHost)
-	{
-		if( isHost )
-		{
-
-		}
-		else
-		{
-
-		}
-	}
-
-	public void setBluetoothInterface(IBluetooth interfaceBluetooth)
-	{
-		bluetoothCom = interfaceBluetooth;
-	}
-
-	private float getFloatFromStr(String str)
-	{
-		try
-		{
-			return Float.parseFloat(str);
-		}
-		catch (NumberFormatException ex)
-		{
-			return 0.0f;
-		}
-	}
-
-	public void incomingMessage(String str)
-	{
-		Gdx.app.log(TAG, str);
-
-		int index,end;
-		// Get Opponent Paddle Position from String
-		index = str.indexOf("[");
-		if(index != -1)
-		{
-			end = str.indexOf("]");
-			if( end > index)
-			{
-
-			}
-		}
-
-		//Handle Ball Position Update
-		index = str.indexOf("{");
-		if(index != -1)
-		{
-			end = str.indexOf("}");
-			if( end > index)
-			{
-				String content = str.substring(index + 1,end);
-				Gdx.app.log(TAG, content);
-
-				String[] splited = content.split(":");
-
-			}
-		}
-
-	}
-
 
 	@Override
 	public void dispose () {
