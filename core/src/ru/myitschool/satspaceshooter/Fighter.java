@@ -4,12 +4,12 @@ import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class Ship extends SpaceObject{
-    boolean isVisible = true;
-    int lives = 3;
-    long timeStartInvisible, timeInvisibleInterval = 1000;
+public class Fighter extends Object {
+    int lives = 1;
+    int width = 120;
+    int height = 120;
 
-    public Ship(float x, float y, float width, float height) {
+    public Fighter(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
 
@@ -17,12 +17,6 @@ public class Ship extends SpaceObject{
     void move() {
         super.move();
         outOfBounds();
-        if(!isVisible) {
-            if(timeStartInvisible+timeInvisibleInterval<TimeUtils.millis()){
-                isVisible = true;
-                x = SCR_WIDTH/2;
-            }
-        }
     }
 
     void hit(float tx, float ty) {
@@ -43,8 +37,6 @@ public class Ship extends SpaceObject{
     }
 
     void kill(){
-        isVisible = false;
-        timeStartInvisible = TimeUtils.millis();
         lives--;
     }
 }

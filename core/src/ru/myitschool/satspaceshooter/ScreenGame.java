@@ -9,30 +9,36 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class ScreenGame implements Screen {
     MyGG gg;
 
     Texture imgBackGround;
-    Texture imgShip;
+    Texture imgFighter;
+    Texture imgFat;
+    Texture imgHorse;
     Texture imgEnemy;
     Texture imgShot;
     Music fightMus = Gdx.audio.newMusic(Gdx.files.internal("fight1.mp3"));
+    Sound shotsnd = Gdx.audio.newSound(Gdx.files.internal("shotsnd.wav"));
 
     TextButton btnPlay, btnExit;
 
-    boolean isGyroscopeAvailable;
-    boolean isAccelerometerAvailable;
+    long timeEnemyLastSpawn, timeEnemySpawnInterval = 3000;
+    long timeHorseLastSpawn, timeHorseSpawnInterval = 6000;
+    long timeFatLastSpawn, timeFatSpawnInterval = 8000;
+    Fighter fighter;
 
-    Ship ship;
     ArrayList<Enemy> enemies = new ArrayList<>();
+
+    ArrayList<Horse> horses = new ArrayList<>();
     ArrayList<Shot> shots = new ArrayList<>();
-    long timeShotLastSpawn, timeShotSpawnInterval = 500;
+
+    ArrayList<EnemyFat> fats = new ArrayList<>();
+    long timeShotLastSpawn, timeShotSpawnInterval = 1000;
 
     Player[] players = new Player[10];
 
@@ -41,10 +47,13 @@ public class ScreenGame implements Screen {
 
     int frags;
 
+
     public ScreenGame(MyGG myGG){
         gg = myGG;
+        imgHorse = new Texture("horse.png");
+        imgFat = new Texture("enemyFat.png");
         imgBackGround = new Texture("fightbg.jpg");
-        imgShip = new Texture("fighter2.png");
+        imgFighter = new Texture("fighter2.png");
         imgEnemy = new Texture("enemy2.png");
         imgShot = new Texture("shot.png");
 
@@ -56,9 +65,6 @@ public class ScreenGame implements Screen {
             players[i] = new Player("Noname", 0);
         }
         Player.loadTableOfRecords(players);
-
-        isAccelerometerAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
-        isGyroscopeAvailable = Gdx.input.isPeripheralAvailable(Input.Peripheral.Gyroscope);
         newGame();
     }
 
@@ -66,8 +72,7 @@ public class ScreenGame implements Screen {
     public void show() {
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         pause = false;
-
-        fightMus.play();
+        if(gg.musicOn) fightMus.play();
     }
 
     @Override
@@ -76,7 +81,7 @@ public class ScreenGame implements Screen {
         if(Gdx.input.isTouched()){
             gg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             gg.camera.unproject(gg.touch);
-            ship.hit(gg.touch.x, gg.touch.y);
+            fighter.hit(gg.touch.x, gg.touch.y);
             if(btnPlay.hit(gg.touch.x, gg.touch.y)) {
                 newGame();
             }
@@ -84,10 +89,6 @@ public class ScreenGame implements Screen {
                 newGame();
                 gg.setScreen(gg.screenIntro);
             }
-        } else if(isAccelerometerAvailable) {
-            ship.vx = -Gdx.input.getAccelerometerX()*10;
-        } else if(isGyroscopeAvailable) {
-            ship.vx = Gdx.input.getGyroscopeY()*10;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
             gg.setScreen(gg.screenIntro);
@@ -96,17 +97,31 @@ public class ScreenGame implements Screen {
         // события
         if(!pause) {
             if(!gameOver) {
-                ship.move();
-            }
-            if(ship.isVisible) {
+                fighter.move();
                 spawnShot();
+                spawnEnemy();
+                spawnHorse();
+                spawnFat();
             }
-
             for (int i = enemies.size()-1; i >= 0 ; i--) {
                 enemies.get(i).move();
                 if (enemies.get(i).outOfBounds()) {
-                    if(ship.isVisible) killShip();
-                    enemies.remove(i);
+                  killShip();
+                  enemies.remove(i);
+                }
+            }
+            for (int i = horses.size()-1; i >= 0 ; i--) {
+                horses.get(i).move();
+                if (horses.get(i).outOfBounds()) {
+                    killShip();
+                    horses.remove(i);
+                }
+            }
+            for (int i = fats.size()-1; i >= 0 ; i--) {
+                fats.get(i).move();
+                if (fats.get(i).outOfBounds()) {
+                    killShip();
+                    fats.remove(i);
                 }
             }
             for (int i = shots.size()-1; i >= 0; i--) {
@@ -119,7 +134,20 @@ public class ScreenGame implements Screen {
                     if(shots.get(i).overlap(enemies.get(j))){
                         shots.remove(i);
                         enemies.remove(j);
-                        frags++;
+                        break;
+                    }
+                }
+                for (int h = horses.size()-1; h >= 0; h--) {
+                    if(shots.get(i).overlap(horses.get(h))){
+                        shots.remove(i);
+                        horses.remove(h);
+                        break;
+                    }
+                }
+                for (int h = fats.size()-1; h >= 0; h--) {
+                    if(shots.get(i).overlap(fats.get(h))){
+                        shots.remove(i);
+                        fats.remove(h);
                         break;
                     }
                 }
@@ -133,12 +161,10 @@ public class ScreenGame implements Screen {
         gg.batch.begin();
         gg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         for(Enemy enemy: enemies) gg.batch.draw(imgEnemy, enemy.getX(), enemy.getY(), enemy.width, enemy.height);
+        for(EnemyFat : enemies) gg.batch.draw(imgEnemy, enemy.getX(), enemy.getY(), enemy.width, enemy.height);
+        for(Horse horse: horses) gg.batch.draw(imgHorse, horse.getX(), horse.getY(), horse.width, horse.height);
         for(Shot shot: shots) gg.batch.draw(imgShot, shot.getX(), shot.getY(), shot.width, shot.height);
-        if(ship.isVisible) gg.batch.draw(imgShip, ship.getX(), ship.getY(), ship.width, ship.height);
-        gg.font.draw(gg.batch, "FRAGS: "+frags, 10, SCR_HEIGHT-10);
-        for (int i = 1; i < ship.lives+1; i++) {
-            gg.batch.draw(imgShip, SCR_WIDTH-60*i, SCR_HEIGHT-60, 50, 50);
-        }
+        gg.batch.draw(imgFighter, fighter.getX(), fighter.getY(), fighter.width, fighter.height);
         if(gameOver) {
             gg.font.draw(gg.batch, Player.tableOfRecordsToString(players), 200, SCR_HEIGHT-200);
             btnPlay.font.draw(gg.batch, btnPlay.text, btnPlay.x, btnPlay.y);
@@ -171,33 +197,58 @@ public class ScreenGame implements Screen {
 
     @Override
     public void dispose() {
-        imgShip.dispose();
+        imgFighter.dispose();
+        imgEnemy.dispose();
+        imgHorse.dispose();
+        imgShot.dispose();
+        imgFat.dispose();
+        imgBackGround.dispose();
+    }
+
+    void spawnEnemy(){
+        if(TimeUtils.millis() > timeEnemyLastSpawn+timeEnemySpawnInterval) {
+            enemies.add(new Enemy());
+            timeEnemyLastSpawn = TimeUtils.millis();
+        }
+        if(TimeUtils.millis() > timeHorseLastSpawn+timeHorseSpawnInterval) {
+            horses.add(new Horse());
+            timeHorseLastSpawn = TimeUtils.millis();
+        }
+        if(TimeUtils.millis() > timeFatLastSpawn+timeFatSpawnInterval) {
+            fats.add(new EnemyFat());
+            timeFatLastSpawn = TimeUtils.millis();
+        }
     }
 
 
     void spawnShot(){
         if(TimeUtils.millis() > timeShotLastSpawn+timeShotSpawnInterval) {
-            shots.add(new Shot(ship.x, ship.y));
+            shots.add(new Shot(fighter.x, fighter.y));
+            if (gg.soundOn) shotsnd.play();
             timeShotLastSpawn = TimeUtils.millis();
         }
     }
 
 
     void killShip(){
-        ship.kill();
-        if(ship.lives == 0) gameOver();
+        fighter.kill();
+        if(fighter.lives == 0) gameOver();
     }
 
     void newGame(){
-        ship = new Ship(SCR_WIDTH/2, 100, 100, 100);
-        enemies.add(new Enemy());
+        fighter = new Fighter(SCR_WIDTH/2, 100, 100, 100);
+        imgFighter = new Texture("fighter1.png");
+        enemies.clear();
+        horses.clear();
         shots.clear();
+        fats.clear();
         gameOver = false;
         frags = 0;
     }
 
     void gameOver(){
         gameOver = true;
+        imgFighter = new Texture("fighter3.png");
         players[players.length-1].name = gg.playerName;
         players[players.length-1].frags = frags;
         Player.sortTableOfRecords(players);

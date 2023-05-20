@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
 
 public class MyGG extends Game {
-	private static final String TAG = "BluetoothPong";
 	public static final float SCR_WIDTH = 720, SCR_HEIGHT = 1280;
 	SpriteBatch batch;
 	OrthographicCamera camera;
@@ -53,12 +52,12 @@ public class MyGG extends Game {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Chibola.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = 60;
-		parameter.color = new Color().set(1, 0, 0, 1);
+		parameter.color = new Color().set(0.179f,0.121f,0.099f,1);
 		parameter.borderColor = new Color().set(0, 0, 0, 1);
 		parameter.borderWidth = 2;
 		parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 		font = generator.generateFont(parameter);
-		parameter.color = new Color().set(1, 0, 0, 1);
+		parameter.color = new Color().set(0.179f,0.121f,0.099f,1);
 		parameter.size = 80;
 		fontLarge = generator.generateFont(parameter);
 		generator.dispose();

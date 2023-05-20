@@ -3,12 +3,12 @@ package ru.myitschool.satspaceshooter;
 import static ru.myitschool.satspaceshooter.MyGG.SCR_HEIGHT;
 import static ru.myitschool.satspaceshooter.MyGG.SCR_WIDTH;
 
-public class SpaceObject {
+public class Object {
     float x, y;
     float width, height;
     float vx, vy;
 
-    public SpaceObject(float x, float y, float width, float height) {
+    public Object(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
         this.width = width;

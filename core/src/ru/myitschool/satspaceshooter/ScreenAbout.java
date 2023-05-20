@@ -13,13 +13,7 @@ public class ScreenAbout implements Screen {
     Texture imgBackGround;
 
     TextButton btnBack;
-    String textAbout =  "Эта игра-стрелялка\n" +
-                        "создана в IT-школе\n" +
-                        "Samsung на Java\n" +
-                        "под Android c\n" +
-                        "использованием LibGdx\n\n" +
-                        "Цель игры - сбивать\n" +
-                        "вражеские самолётики\n";
+    String textAbout =  "";
 
     Music menuMus = Gdx.audio.newMusic(Gdx.files.internal("menu.mp3"));
 
@@ -32,7 +26,8 @@ public class ScreenAbout implements Screen {
 
     @Override
     public void show() {
-    menuMus.play();
+
+        if(gg.musicOn) menuMus.play();
     }
 
     @Override

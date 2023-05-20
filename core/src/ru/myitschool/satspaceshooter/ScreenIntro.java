@@ -19,15 +19,16 @@ public class ScreenIntro implements Screen {
     public ScreenIntro(MyGG myGG){
         gg = myGG;
         imgBackGround = new Texture("bg.png");
-        btnPlay = new TextButton(gg.fontLarge, "ИГРАТЬ", 100, 900);
-        btnSettings = new TextButton(gg.fontLarge, "НАСТРОЙКИ", 100, 800);
-        btnAbout = new TextButton(gg.fontLarge, "ОБ ИГРЕ", 100, 700);
-        btnExit = new TextButton(gg.fontLarge, "ВЫХОД", 100, 600);
+        btnPlay = new TextButton(gg.fontLarge, "ИГРАТЬ", 100, 450);
+        btnSettings = new TextButton(gg.fontLarge, "НАСТРОЙКИ", 100, 350);
+        btnAbout = new TextButton(gg.fontLarge, "ОБ ИГРЕ", 100, 250);
+        btnExit = new TextButton(gg.fontLarge, "ВЫХОД", 100, 150);
     }
 
     @Override
     public void show() {
-    menuMus.play();
+
+        if(gg.musicOn) menuMus.play();
     }
 
     @Override

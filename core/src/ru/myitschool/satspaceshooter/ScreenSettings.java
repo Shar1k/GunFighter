@@ -35,7 +35,7 @@ public class ScreenSettings implements Screen {
 
     @Override
     public void show() {
-    menuMus.play();
+        if(gg.musicOn) menuMus.play();
     }
 
     @Override
