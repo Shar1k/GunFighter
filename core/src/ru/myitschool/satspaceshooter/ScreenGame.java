@@ -53,7 +53,7 @@ public class ScreenGame implements Screen {
         imgHorse = new Texture("horse.png");
         imgFat = new Texture("enemyFat.png");
         imgBackGround = new Texture("fightbg.jpg");
-        imgFighter = new Texture("fighter2.png");
+        imgFighter = new Texture("fighter1.png");
         imgEnemy = new Texture("enemy2.png");
         imgShot = new Texture("shot.png");
 
@@ -100,27 +100,27 @@ public class ScreenGame implements Screen {
                 fighter.move();
                 spawnShot();
                 spawnEnemy();
-                spawnHorse();
-                spawnFat();
+                //spawnHorse();
+                //spawnFat();
             }
             for (int i = enemies.size()-1; i >= 0 ; i--) {
                 enemies.get(i).move();
                 if (enemies.get(i).outOfBounds()) {
-                  killShip();
+                    killfighter();
                   enemies.remove(i);
                 }
             }
             for (int i = horses.size()-1; i >= 0 ; i--) {
                 horses.get(i).move();
                 if (horses.get(i).outOfBounds()) {
-                    killShip();
+                    killfighter();
                     horses.remove(i);
                 }
             }
             for (int i = fats.size()-1; i >= 0 ; i--) {
                 fats.get(i).move();
                 if (fats.get(i).outOfBounds()) {
-                    killShip();
+                    killfighter();
                     fats.remove(i);
                 }
             }
@@ -161,7 +161,7 @@ public class ScreenGame implements Screen {
         gg.batch.begin();
         gg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         for(Enemy enemy: enemies) gg.batch.draw(imgEnemy, enemy.getX(), enemy.getY(), enemy.width, enemy.height);
-        for(EnemyFat : enemies) gg.batch.draw(imgEnemy, enemy.getX(), enemy.getY(), enemy.width, enemy.height);
+        for(EnemyFat fat: fats) gg.batch.draw(imgFat, fat.getX(), fat.getY(), fat.width, fat.height);
         for(Horse horse: horses) gg.batch.draw(imgHorse, horse.getX(), horse.getY(), horse.width, horse.height);
         for(Shot shot: shots) gg.batch.draw(imgShot, shot.getX(), shot.getY(), shot.width, shot.height);
         gg.batch.draw(imgFighter, fighter.getX(), fighter.getY(), fighter.width, fighter.height);
@@ -230,7 +230,7 @@ public class ScreenGame implements Screen {
     }
 
 
-    void killShip(){
+    void killfighter(){
         fighter.kill();
         if(fighter.lives == 0) gameOver();
     }
@@ -248,7 +248,6 @@ public class ScreenGame implements Screen {
 
     void gameOver(){
         gameOver = true;
-        imgFighter = new Texture("fighter3.png");
         players[players.length-1].name = gg.playerName;
         players[players.length-1].frags = frags;
         Player.sortTableOfRecords(players);
