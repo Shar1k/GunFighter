@@ -12,8 +12,7 @@ public class EnemyFat extends Object{
         x = MathUtils.random(width/2, SCR_WIDTH-width/2);
         y = MathUtils.random(SCR_HEIGHT+height/2, SCR_HEIGHT*2);
         vy = MathUtils.random(-2f, -1f);
-        int i = 0;
-        int lives = 5;
+        lives = 5;
     }
 
     @Override
@@ -21,6 +20,8 @@ public class EnemyFat extends Object{
         outOfBounds();
         y = y + vy;
     }
+
+
 
     @Override
     boolean outOfBounds() {

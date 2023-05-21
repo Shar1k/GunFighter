@@ -19,7 +19,7 @@ public class ScreenAbout implements Screen {
 
     public ScreenAbout(MyGG myGG){
         gg = myGG;
-        imgBackGround = new Texture("bg.png");
+        imgBackGround = new Texture("bgMenu.png");
 
         btnBack = new TextButton(gg.fontLarge, "ВЫХОД", 100, 200, true);
     }

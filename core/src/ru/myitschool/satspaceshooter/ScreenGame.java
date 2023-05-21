@@ -26,9 +26,9 @@ public class ScreenGame implements Screen {
     Sound shotsnd = Gdx.audio.newSound(Gdx.files.internal("shotsnd.wav"));
 
     TextButton btnPlay, btnExit;
-
+    long timeHardcore, TimeHardcoreInterval = 999999999;
     long timeEnemyLastSpawn, timeEnemySpawnInterval = 3000;
-    long timeHorseLastSpawn, timeHorseSpawnInterval = 6000;
+    long timeHorseLastSpawn, timeHorseSpawnInterval = 600000000;
     long timeFatLastSpawn, timeFatSpawnInterval = 8000;
     Fighter fighter;
 
@@ -97,6 +97,9 @@ public class ScreenGame implements Screen {
         // события
         if(!pause) {
             if(!gameOver) {
+                if(TimeUtils.millis() > timeHardcore*100000+TimeHardcoreInterval & timeEnemySpawnInterval>1000) {
+                    timeEnemySpawnInterval--;
+                }
                 fighter.move();
                 spawnShot();
                 spawnEnemy();
@@ -134,21 +137,22 @@ public class ScreenGame implements Screen {
                     if(shots.get(i).overlap(enemies.get(j))){
                         shots.remove(i);
                         enemies.remove(j);
+                        frags++;
                         break;
                     }
                 }
-                for (int h = horses.size()-1; h >= 0; h--) {
-                    if(shots.get(i).overlap(horses.get(h))){
+                for (int j = horses.size()-1; j >= 0; j--) {
+                    if(shots.get(i).overlap(horses.get(j))){
                         shots.remove(i);
-                        horses.remove(h);
+                        frags++;
                         break;
                     }
                 }
-                for (int h = fats.size()-1; h >= 0; h--) {
-                    if(shots.get(i).overlap(fats.get(h))){
+                for (int j = fats.size()-1; j >= 0; j--) {
+                    if(shots.get(i).overlap(fats.get(j))){
                         shots.remove(i);
-                        fats.remove(h);
-                        break;
+
+                        frags++;
                     }
                 }
             }
@@ -165,6 +169,7 @@ public class ScreenGame implements Screen {
         for(Horse horse: horses) gg.batch.draw(imgHorse, horse.getX(), horse.getY(), horse.width, horse.height);
         for(Shot shot: shots) gg.batch.draw(imgShot, shot.getX(), shot.getY(), shot.width, shot.height);
         gg.batch.draw(imgFighter, fighter.getX(), fighter.getY(), fighter.width, fighter.height);
+        gg.font.draw(gg.batch, ""+frags, 10, SCR_HEIGHT-10);
         if(gameOver) {
             gg.font.draw(gg.batch, Player.tableOfRecordsToString(players), 200, SCR_HEIGHT-200);
             btnPlay.font.draw(gg.batch, btnPlay.text, btnPlay.x, btnPlay.y);
@@ -210,14 +215,14 @@ public class ScreenGame implements Screen {
             enemies.add(new Enemy());
             timeEnemyLastSpawn = TimeUtils.millis();
         }
-        if(TimeUtils.millis() > timeHorseLastSpawn+timeHorseSpawnInterval) {
+       /* if(TimeUtils.millis() > timeHorseLastSpawn+timeHorseSpawnInterval) {
             horses.add(new Horse());
             timeHorseLastSpawn = TimeUtils.millis();
         }
         if(TimeUtils.millis() > timeFatLastSpawn+timeFatSpawnInterval) {
             fats.add(new EnemyFat());
             timeFatLastSpawn = TimeUtils.millis();
-        }
+        }*/
     }
 
 

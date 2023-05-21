@@ -7,6 +7,7 @@ public class Object {
     float x, y;
     float width, height;
     float vx, vy;
+    int lives = 0;
 
     public Object(float x, float y, float width, float height) {
         this.x = x;

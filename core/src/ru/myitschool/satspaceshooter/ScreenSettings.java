@@ -22,7 +22,7 @@ public class ScreenSettings implements Screen {
 
     public ScreenSettings(MyGG myGG){
         gg = myGG;
-        imgBackGround = new Texture("bg.png");
+        imgBackGround = new Texture("bgMenu.png");
 
         btnName = new TextButton(gg.fontLarge, "Имя: "+gg.playerName, 20, 1100, true);
         btnClearRec = new TextButton(gg.fontLarge, "Очистка рекордов", 20, 1000, true);
